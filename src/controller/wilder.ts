@@ -1,8 +1,6 @@
 import {Request, Response} from "express";
 import dataSource from "../utils";
 import {Wilder} from "../entity/Wilder";
-import {Grade} from "../entity/Grade";
-
 const wilderController = {
 create: async (req: Request, res: Response) => {
 try{
@@ -17,33 +15,14 @@ res.send ("Error while creating wilder");
 }
 },
 read: async (req: Request, res: Response) => {
-try {
-    const grades = await dataSource.getRepository(Grade).find();
-    console.log(grades);
-
-    const wilders = await dataSource.getRepository(Wilder).find();
-    console.log("wilders", wilders);
-
-    const data = wilders.map((wilder) => {
-        const wilderGrades = grades.filter(
-            (grade) => grade.wilder.id === wilder.id
-        );
-        const wilderGradeLean = wilderGrades.map((el) => {
-            return { title: el.skill.name, votes: el.grade};
-        });
-        const result = {
-            ...wilder,
-            skills: wilderGradeLean,
-        }
-        console.log(result);
-        return result
-    });
-    res.send(data)
-
-} catch(error) {
-        console.log(error)
-        res.send("Error while creating wilder");
+    try {
+        const data = await dataSource.getRepository(Wilder).find();
+        res.send (data); 
     }
+    catch (error) {
+        console.log(error);
+        res.send("Error in the display of Wilders");
+    };
 },
 update:  async (req: Request, res: Response) => {
 try {
